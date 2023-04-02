@@ -6,8 +6,10 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const user = useUser();
+  const { data } = api.jobOffers.getAll.useQuery()
+  const user = useUser()
+
+  console.log(data);
 
   return (
     <>
@@ -22,7 +24,11 @@ const Home: NextPage = () => {
           <h1> Sign in </h1>
           {user.isSignedIn ? <SignOutButton /> : <SignInButton />}
         </div>
-        {/* <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" /> */}
+        <div>
+          {data?.map(jobOffer => {
+            return <div key={jobOffer.id}>{jobOffer.title}</div>
+          })}
+        </div>
       </main>
     </>
   );
